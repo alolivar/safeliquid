@@ -40,6 +40,16 @@ namespace SafeLiquid
 
         public Template(PreStrainer preStrainer = null)
         {
+
+            if (preStrainer == null)
+            {
+                preStrainer = new PreStrainer();
+            }
+
+            preStrainer.GlobalFilter(typeof(LiquidDateFilters));
+            preStrainer.GlobalFilter(typeof(LiquidArrayFilters));
+
+
             Tags = new Dictionary<string, Tuple<ITagFactory, Type>>();
             SafeTypeTransformers = new Dictionary<Type, Func<object, object>>();
             ValueTypeTransformers = new Dictionary<Type, Func<object, object>>();
@@ -63,6 +73,23 @@ namespace SafeLiquid
             RegisterTag<Unless>("unless");
             RegisterTag<Raw>("raw");
             RegisterTag<TableRow>("tablerow");
+
+
+            RegisterTag<JsonTag>(JsonTag.JsonTagName);
+            RegisterTag<IsIntegerTag>(IsIntegerTag.IsIntTagName);
+            RegisterTag<IsStringTag>(IsStringTag.IsStringTagName);
+            RegisterTag<IsBooleanTag>(IsBooleanTag.IsBooleanTagName);
+            RegisterTag<IsArrayTag>(IsArrayTag.IsArrayTagName);
+            RegisterTag<IsTimeSpanTag>(IsTimeSpanTag.IsTimeSpanTagName);
+            RegisterTag<MinLengthTag>(MinLengthTag.MinLengthTagName);
+            RegisterTag<MaxLengthTag>(MaxLengthTag.MaxLengthTagName);
+            RegisterTag<RequiredTag>(RequiredTag.RequiredTagName);
+            RegisterTag<OneOfTag>(OneOfTag.OneOfTagName);
+            RegisterTag<MinValueTag>(MinValueTag.MinValueTagName);
+            RegisterTag<MaxValueTag>(MaxValueTag.MaxValueTagName);
+            RegisterTag<ErrorTag>(ErrorTag.ErrorTagName);
+            RegisterTag<ParamTag>(ParamTag.ParamTagName);
+
         }
 
         public void SetContext(Context context)

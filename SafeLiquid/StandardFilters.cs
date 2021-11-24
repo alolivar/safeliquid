@@ -120,10 +120,10 @@ namespace SafeLiquid
         public static string[] Split(string input, string pattern)
         {
             if (input.IsNullOrWhiteSpace())
-                return new string[1] { input };
-            if (string.IsNullOrEmpty(pattern))
-                return ((IEnumerable<char>)input.ToCharArray()).Select<char, string>((Func<char, string>)(character => character.ToString())).ToArray<string>();
-            return input.Split(new string[1] { pattern }, StringSplitOptions.RemoveEmptyEntries);
+                return new[] { input };
+            return string.IsNullOrEmpty(pattern)
+                ? input.ToCharArray().Select(character => character.ToString()).ToArray()
+                : input.Split(new[] { pattern }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static string StripHtml(string input) => !input.IsNullOrWhiteSpace() ? Regex.Replace(input, "<.*?>", string.Empty, RegexOptions.None, RegexTimeOut) : input;
@@ -474,21 +474,16 @@ namespace SafeLiquid
         public static IEnumerable Uniq(object input)
         {
             if (input == null)
-                return (IEnumerable)null;
-            List<object> source;
-            if (input is IEnumerable)
+                return null;
+            var enumerable = input as IEnumerable;
+            if (enumerable != null)
             {
-                source = ((IEnumerable)input).Flatten().Cast<object>().ToList<object>();
+                return enumerable.Cast<object>().Distinct();
             }
             else
             {
-                source = new List<object>((IEnumerable<object>)new object[1]
-                {
-          input
-                });
+                return new List<object>(new[] { input });
             }
-
-            return !source.Any<object>() ? (IEnumerable)source : (IEnumerable)source.Distinct<object>().ToList<object>();
         }
 
         public static double Abs(object input)
