@@ -48,6 +48,13 @@ namespace SafeLiquid.Tags
                 partial = templateFileSystem.GetTemplate(context, this._templateName);
             if (partial == null)
                 partial = Template.Parse(fileSystem2.ReadTemplateFile(context, this._templateName), Template.PreStrainer);
+
+            // force passing down the file system.
+            if(partial.FileSystem is BlankFileSystem)
+            {
+                partial.FileSystem = this.Template.FileSystem;
+            }
+
             string shortenedTemplateName = this._templateName.Substring(1, this._templateName.Length - 2);
             object variable = context[this._variableName ?? shortenedTemplateName, this._variableName != null];
             context.Stack((Action)(() =>
